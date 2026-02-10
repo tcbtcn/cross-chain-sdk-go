@@ -76,6 +76,7 @@ func main() {
 - Order status tracking
 - Support for native assets
 - EIP-712 signing for EVM orders
+- **WebSocket API** for real-time order updates and RPC functionality
 
 ## Supported Chains
 
@@ -170,6 +171,126 @@ Submits a secret for an escrow deployment.
 err := client.SubmitSecret(ctx, orderHash, secret)
 ```
 
+### WebSocket API
+
+The WebSocket API provides real-time order updates and RPC functionality for the cross-chain SDK.
+
+#### NewWebSocketApi
+
+Creates a new WebSocket API client.
+
+```go
+import "github.com/dawitel/cross-chain-sdk-go/ws-api"
+
+ws, err := wsapi.NewWebSocketApi(wsapi.WsApiConfig{
+    URL:     "wss://api.1inch.dev/fusion-plus/ws",
+    AuthKey: "your-auth-key",
+    LazyInit: false, // Set to true for lazy initialization
+})
+if err != nil {
+    log.Fatal(err)
+}
+
+// Initialize connection (if lazyInit was true)
+ws.Init()
+```
+
+#### Order Events
+
+Subscribe to real-time order updates.
+
+```go
+// Subscribe to all order events
+ws.Order.OnOrder(func(data wsapi.OrderEventType) {
+    switch data.GetEvent() {
+    case wsapi.EventTypeOrderCreated:
+        if created, ok := data.(*wsapi.OrderCreatedEvent); ok {
+            fmt.Printf("Order created: %s\n", created.OrderHash)
+        }
+    case wsapi.EventTypeOrderFilled:
+        if filled, ok := data.(*wsapi.OrderFilledEvent); ok {
+            fmt.Printf("Order filled: %s\n", filled.OrderHash)
+        }
+    }
+})
+
+// Subscribe to specific order events
+ws.Order.OnOrderCreated(func(data *wsapi.OrderCreatedEvent) {
+    fmt.Printf("Order created: %s\n", data.OrderHash)
+})
+
+ws.Order.OnOrderFilled(func(data *wsapi.OrderFilledEvent) {
+    fmt.Printf("Order filled: %s\n", data.OrderHash)
+})
+
+ws.Order.OnOrderCancelled(func(data *wsapi.OrderCancelledEvent) {
+    fmt.Printf("Order cancelled: %s\n", data.OrderHash)
+})
+
+ws.Order.OnOrderInvalid(func(data *wsapi.OrderInvalidEvent) {
+    fmt.Printf("Order invalid: %s, reason: %s\n", data.OrderHash, data.Reason)
+})
+```
+
+#### RPC Methods
+
+Call RPC methods for querying data.
+
+```go
+// Ping/Pong
+ws.RPC.Ping()
+ws.RPC.OnPong(func(result string) {
+    fmt.Printf("Pong received: %s\n", result)
+})
+
+// Get active orders
+ws.RPC.GetActiveOrders(1, 10) // page, limit
+ws.RPC.OnGetActiveOrders(func(result interface{}) {
+    fmt.Printf("Active orders received\n")
+})
+
+// Get secrets
+ws.RPC.GetSecrets(1, 10) // page, limit
+ws.RPC.OnGetSecrets(func(result interface{}) {
+    fmt.Printf("Secrets received\n")
+})
+
+// Get allowed methods
+ws.RPC.GetAllowedMethods()
+ws.RPC.OnGetAllowedMethods(func(result []string) {
+    fmt.Printf("Allowed methods: %v\n", result)
+})
+```
+
+#### Connection Management
+
+Handle WebSocket connection lifecycle.
+
+```go
+// Connection events
+ws.OnOpen(func() {
+    fmt.Println("WebSocket connected")
+})
+
+ws.OnClose(func() {
+    fmt.Println("WebSocket disconnected")
+})
+
+ws.OnError(func(err error) {
+    fmt.Printf("WebSocket error: %v\n", err)
+})
+
+// Close connection
+defer ws.Close()
+```
+
+#### WebSocket Features
+
+- **Order Events**: Subscribe to real-time order updates (created, filled, cancelled, invalid, etc.)
+- **RPC Methods**: Call RPC methods like `getActiveOrders`, `getSecrets`, `ping`
+- **Connection Management**: Handle connection lifecycle (open, close, error)
+- **Type Safety**: Strongly typed event structures matching the TypeScript SDK
+
 ## Examples
 
 See the `examples/` directory for complete working examples:
@@ -178,6 +299,8 @@ See the `examples/` directory for complete working examples:
 - `examples/evm_to_evm/` - EVM to EVM cross-chain swap example (Polygon to BSC)
 - `examples/evm_to_solana/` - EVM to Solana cross-chain swap example (Ethereum to Solana)
 - `examples/solana_to_evm/` - Solana to EVM cross-chain swap example (Solana to Ethereum)
+- `examples/websocket_order_events/` - WebSocket API example for subscribing to order events
+- `examples/websocket_rpc/` - WebSocket API example for RPC methods
 
 ## Requirements
 

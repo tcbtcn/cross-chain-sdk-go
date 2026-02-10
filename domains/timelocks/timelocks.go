@@ -83,9 +83,12 @@ func NewTimeLocks(params TimeLocksParams) (*TimeLocks, error) {
 func TimeLocksFromBigInt(val *big.Int) (*TimeLocks, error) {
 	params := make([]*big.Int, 8)
 	mask := big.NewInt(0xffffffff)
+	// Build() shifts left, so first value is in highest bits (224-255), last value is in lowest bits (0-31)
+	// We need to extract in reverse order: params[0] from bits 224-255, params[7] from bits 0-31
 	for i := 0; i < 8; i++ {
-		shift := big.NewInt(int64(i * 32))
-		shifted := new(big.Int).Rsh(val, uint(shift.Uint64()))
+		// Extract from position (7-i)*32 to (8-i)*32
+		shift := uint((7 - i) * 32)
+		shifted := new(big.Int).Rsh(val, shift)
 		params[i] = new(big.Int).And(shifted, mask)
 	}
 

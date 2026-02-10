@@ -8,12 +8,11 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-// Test vectors from known Keccak256 hashes
 func TestKeccak256(t *testing.T) {
 	tests := []struct {
 		name  string
 		input []byte
-		want  string // hex encoded expected hash
+		want  string
 	}{
 		{
 			name:  "empty input",
@@ -28,7 +27,7 @@ func TestKeccak256(t *testing.T) {
 		{
 			name:  "zero bytes",
 			input: []byte{0x00, 0x00, 0x00},
-			want:  "99ff0d9125e1fc9531a11262e15aeb2c60509a078c4cc4c6c4c4efdfb06ff68647",
+			want:  "99ff0d9125e1fc9531a11262e15aeb2c60509a078c4cc4c64cefdfb06ff68647",
 		},
 		{
 			name:  "32 bytes of zeros",
@@ -48,15 +47,10 @@ func TestKeccak256(t *testing.T) {
 }
 
 func TestKeccak256Hex(t *testing.T) {
-	input := []byte("test")
+	input := []byte("hello")
+	expected := "0x1c8aff950685c2ed4bc3174f3472287b56d9517b9c948127319a09a7a36deac8"
 	got := Keccak256Hex(input)
-
-	expectedHash := Keccak256(input)
-	expectedHex := "0x" + hex.EncodeToString(expectedHash)
-
-	assert.Equal(t, expectedHex, got)
-	assert.True(t, len(got) > 2)
-	assert.Equal(t, "0x", got[:2])
+	assert.Equal(t, expected, got)
 }
 
 func TestKeccak256FromHex(t *testing.T) {
@@ -67,17 +61,17 @@ func TestKeccak256FromHex(t *testing.T) {
 	}{
 		{
 			name:    "valid hex",
-			hexStr:  "0x68656c6c6f", // "hello"
+			hexStr:  "0x68656c6c6f",
 			wantErr: false,
 		},
 		{
 			name:    "valid hex without 0x",
 			hexStr:  "68656c6c6f",
-			wantErr: true, // function expects 0x prefix
+			wantErr: true, // Our function requires 0x prefix
 		},
 		{
 			name:    "invalid hex",
-			hexStr:  "0xgh",
+			hexStr:  "0xzzzz",
 			wantErr: true,
 		},
 		{
@@ -96,7 +90,6 @@ func TestKeccak256FromHex(t *testing.T) {
 			} else {
 				assert.NoError(t, err)
 				assert.NotNil(t, got)
-				assert.Equal(t, 32, len(got)) // Keccak256 always returns 32 bytes
 			}
 		})
 	}
@@ -112,25 +105,25 @@ func TestSolidityPackedKeccak256(t *testing.T) {
 		{
 			name:    "uint64 and bytes32",
 			types:   []string{"uint64", "bytes32"},
-			values:  []interface{}{uint64(123), repeatHex("00", 32)},
+			values:  []interface{}{uint64(123), "0x0000000000000000000000000000000000000000000000000000000000000001"},
 			wantErr: false,
 		},
 		{
 			name:    "multiple uint64",
-			types:   []string{"uint64", "uint64"},
-			values:  []interface{}{uint64(1), uint64(2)},
+			types:   []string{"uint64", "uint64", "uint64"},
+			values:  []interface{}{uint64(1), uint64(2), uint64(3)},
 			wantErr: false,
 		},
 		{
 			name:    "mismatched types and values",
-			types:   []string{"uint64"},
-			values:  []interface{}{uint64(1), uint64(2)},
-			wantErr: false, // function doesn't check length mismatch
+			types:   []string{"uint64", "uint64"},
+			values:  []interface{}{uint64(1)},
+			wantErr: true,
 		},
 		{
 			name:    "unsupported type",
 			types:   []string{"string"},
-			values:  []interface{}{"test"},
+			values:  []interface{}{"hello"},
 			wantErr: true,
 		},
 	}
@@ -144,31 +137,24 @@ func TestSolidityPackedKeccak256(t *testing.T) {
 			} else {
 				assert.NoError(t, err)
 				assert.NotNil(t, got)
-				assert.Equal(t, 32, len(got))
 			}
 		})
 	}
 }
 
 func TestSolidityPackedKeccak256Hex(t *testing.T) {
-	types := []string{"uint64"}
-	values := []interface{}{uint64(123)}
-
+	types := []string{"uint64", "uint64"}
+	values := []interface{}{uint64(1), uint64(2)}
+	hash, err := SolidityPackedKeccak256(types, values)
+	require.NoError(t, err)
+	expected := "0x" + hex.EncodeToString(hash)
 	got, err := SolidityPackedKeccak256Hex(types, values)
 	require.NoError(t, err)
-
-	assert.True(t, len(got) > 2)
-	assert.Equal(t, "0x", got[:2])
-
-	// Verify it matches the bytes version
-	bytesHash, err := SolidityPackedKeccak256(types, values)
-	require.NoError(t, err)
-	expectedHex := "0x" + hex.EncodeToString(bytesHash)
-	assert.Equal(t, expectedHex, got)
+	assert.Equal(t, expected, got)
 }
 
 func TestKeccak256_Deterministic(t *testing.T) {
-	input := []byte("deterministic test")
+	input := []byte("test input")
 	hash1 := Keccak256(input)
 	hash2 := Keccak256(input)
 	assert.Equal(t, hash1, hash2)

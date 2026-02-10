@@ -8,3 +8,4 @@
 go.work
 vendor/
 .DS_Store
+RELEASE.md

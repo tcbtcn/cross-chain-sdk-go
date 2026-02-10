@@ -99,12 +99,17 @@ func ForMultipleFills(leaves []string) (*HashLock, error) {
 
 	rootBig := new(big.Int).SetBytes(root)
 	count := big.NewInt(int64(len(leaves) - 1))
-	// Set bits 240-255 (16 bits) for the count
+
+	// Clear bits 240-255 (16 bits) first
+	mask := new(big.Int)
+	for i := 0; i < 16; i++ {
+		mask.SetBit(mask, 240+i, 1)
+	}
+	rootBig.AndNot(rootBig, mask)
+
 	for i := 0; i < 16 && i < count.BitLen(); i++ {
 		if count.Bit(i) == 1 {
 			rootBig.SetBit(rootBig, 240+i, 1)
-		} else {
-			rootBig.SetBit(rootBig, 240+i, 0)
 		}
 	}
 

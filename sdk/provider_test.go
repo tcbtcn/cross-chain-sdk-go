@@ -14,10 +14,11 @@ func TestBlockchainProvider_Interface(t *testing.T) {
 
 	var _ BlockchainProvider = mockProvider
 
-	// Test interface methods exist
+	mockProvider.On("SignTypedData", context.Background(), "0x123", eip712.TypedData{}).Return("0xsignature", nil)
 	_, err := mockProvider.SignTypedData(context.Background(), "0x123", eip712.TypedData{})
-	assert.NoError(t, err) // Mock returns nil error by default
+	assert.NoError(t, err)
 
+	mockProvider.On("EthCall", context.Background(), "0x123", "0x456").Return("0xresult", nil)
 	_, err = mockProvider.EthCall(context.Background(), "0x123", "0x456")
 	assert.NoError(t, err)
 }

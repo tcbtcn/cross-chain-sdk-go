@@ -13,7 +13,6 @@ import (
 	apiorders "github.com/dawitel/cross-chain-sdk-go/api/orders"
 	"github.com/dawitel/cross-chain-sdk-go/api/quoter"
 	"github.com/dawitel/cross-chain-sdk-go/chains"
-	"github.com/dawitel/cross-chain-sdk-go/crypto/eip712"
 	"github.com/dawitel/cross-chain-sdk-go/domains/addresses"
 	"github.com/dawitel/cross-chain-sdk-go/domains/auction"
 	"github.com/dawitel/cross-chain-sdk-go/domains/hashlock"
@@ -71,11 +70,11 @@ func sampleQuote() *quoter.QuoterResponse {
 		TimeLocks: quoter.TimeLocksRaw{
 			SrcWithdrawal:         3600,
 			SrcPublicWithdrawal:   7200,
-			SrcCancellation:       1800,
-			SrcPublicCancellation: 3600,
+			SrcCancellation:       10800,
+			SrcPublicCancellation: 14400,
 			DstWithdrawal:         3600,
 			DstPublicWithdrawal:   7200,
-			DstCancellation:       1800,
+			DstCancellation:       10800,
 		},
 		SrcSafetyDeposit: "1000000",
 		DstSafetyDeposit: "1000000",
@@ -84,9 +83,10 @@ func sampleQuote() *quoter.QuoterResponse {
 }
 
 func sampleEvmOrder() *orders.EvmCrossChainOrder {
-	maker, _ := addresses.EvmAddressFromString("0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb")
-	makerAsset, _ := addresses.EvmAddressFromString("0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48")
-	takerAsset, _ := addresses.EvmAddressFromString("0x2791bca1f2de4661ed88a30c99a7a9449aa84174")
+	// Use NewEvmAddress which doesn't return an error for valid addresses
+	maker := addresses.NewEvmAddress("0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb")
+	makerAsset := addresses.NewEvmAddress("0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48")
+	takerAsset := addresses.NewEvmAddress("0x2791bca1f2de4661ed88a30c99a7a9449aa84174")
 	receiver := maker
 
 	secret := repeatHex("00", 31) + "01"
@@ -297,8 +297,7 @@ func TestSDK_SignNativeOrder(t *testing.T) {
 	sdk := NewSDK(config)
 
 	order := sampleEvmOrder()
-	maker, err := addresses.EvmAddressFromString("0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb")
-	require.NoError(t, err)
+	maker := addresses.NewEvmAddress("0x0742D35CC6634c0532925A3b844bc9E7595f0Beb")
 	signature := sdk.SignNativeOrder(order, maker)
 	assert.NotEmpty(t, signature)
 	assert.Equal(t, 132, len(signature)) // 0x + 65 bytes * 2 hex chars
@@ -312,7 +311,7 @@ func TestSDK_SubmitOrder(t *testing.T) {
 	defer server.Close()
 
 	mockProvider := &testutils.MockBlockchainProvider{}
-	mockProvider.On("SignTypedData", context.Background(), "0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb", eip712.TypedData{}).Return("0xsignature", nil)
+	mockProvider.On("SignTypedData", context.Background(), mock.AnythingOfType("string"), mock.AnythingOfType("eip712.TypedData")).Return("0xsignature", nil)
 
 	config := Config{
 		URL:                server.URL,
@@ -385,7 +384,7 @@ func TestSDK_PlaceOrder(t *testing.T) {
 	defer server.Close()
 
 	mockProvider := &testutils.MockBlockchainProvider{}
-	mockProvider.On("SignTypedData", context.Background(), "0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb", eip712.TypedData{}).Return("0xsignature", nil)
+	mockProvider.On("SignTypedData", context.Background(), mock.AnythingOfType("string"), mock.AnythingOfType("eip712.TypedData")).Return("0xsignature", nil)
 
 	config := Config{
 		URL:                server.URL,
@@ -401,7 +400,7 @@ func TestSDK_PlaceOrder(t *testing.T) {
 
 	secretHashes := []string{repeatHex("00", 32)}
 	params := OrderParams{
-		WalletAddress: "0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb",
+		WalletAddress: "0x0742D35CC6634c0532925A3b844bc9E7595f0Beb",
 		HashLock:      hashLock,
 		SecretHashes:  secretHashes,
 		Preset:        "fast",

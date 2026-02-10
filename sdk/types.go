@@ -4,6 +4,7 @@ import (
 	"math/big"
 
 	"github.com/dawitel/cross-chain-sdk-go/chains"
+	"github.com/dawitel/cross-chain-sdk-go/domains/addresses"
 	"github.com/dawitel/cross-chain-sdk-go/domains/hashlock"
 	"github.com/dawitel/cross-chain-sdk-go/orders"
 )
@@ -64,4 +65,22 @@ type PreparedOrder struct {
 
 type QuoteCustomPresetParams struct {
 	CustomPreset interface{}
+}
+
+type EvmOrderCancellationData struct {
+	OrderHash            string
+	Maker                *addresses.EvmAddress
+	SrcChainID           chains.SupportedChain
+	DstChainID           chains.SupportedChain
+	Order                orders.LimitOrderV4Struct
+	Extension            string
+	RemainingMakerAmount *big.Int
+}
+
+type SvmOrderCancellationData struct {
+	OrderHash            []byte
+	Maker                *addresses.SolanaAddress
+	Token                *addresses.SolanaAddress
+	CancellationConfig   interface{} // ResolverCancellationConfig - simplified for now
+	IsAssetNative        bool
 }

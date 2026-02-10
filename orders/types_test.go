@@ -2,6 +2,7 @@ package orders
 
 import (
 	"math/big"
+	"strings"
 	"testing"
 
 	"github.com/dawitel/cross-chain-sdk-go/chains"
@@ -42,7 +43,8 @@ func sampleEvmOrder() *EvmCrossChainOrder {
 func TestEvmCrossChainOrder_Build(t *testing.T) {
 	order := sampleEvmOrder()
 
-	built := order.Build()
+	built, err := order.Build()
+	require.NoError(t, err)
 	assert.NotNil(t, built)
 	assert.Equal(t, order.Maker.ToString(), built.Maker)
 	assert.Equal(t, order.MakerAsset.ToString(), built.MakerAsset)
@@ -53,20 +55,23 @@ func TestEvmCrossChainOrder_Build(t *testing.T) {
 func TestEvmCrossChainOrder_GetOrderHash(t *testing.T) {
 	order := sampleEvmOrder()
 
-	hash := order.GetOrderHash(chains.Ethereum)
-	assert.NotEmpty(t, hash)
-	assert.True(t, len(hash) > 2)
+	hash, err := order.GetOrderHash(chains.Ethereum)
+	require.NoError(t, err)
+	require.NotEmpty(t, hash, "GetOrderHash should return a non-empty hash")
+	require.True(t, len(hash) > 2, "Hash should have at least 2 characters for 0x prefix")
 	assert.Equal(t, "0x", hash[:2])
 
 	// Should be deterministic
-	hash2 := order.GetOrderHash(chains.Ethereum)
+	hash2, err := order.GetOrderHash(chains.Ethereum)
+	require.NoError(t, err)
 	assert.Equal(t, hash, hash2)
 }
 
 func TestEvmCrossChainOrder_GetTypedData(t *testing.T) {
 	order := sampleEvmOrder()
 
-	typedData := order.GetTypedData(chains.Ethereum)
+	typedData, err := order.GetTypedData(chains.Ethereum)
+	require.NoError(t, err)
 	assert.NotNil(t, typedData)
 
 	typedDataMap, ok := typedData.(map[string]interface{})
@@ -80,8 +85,10 @@ func TestEvmCrossChainOrder_GetTypedData(t *testing.T) {
 func TestEvmCrossChainOrder_GetTypedData_DifferentChains(t *testing.T) {
 	order := sampleEvmOrder()
 
-	typedData1 := order.GetTypedData(chains.Ethereum)
-	typedData2 := order.GetTypedData(chains.Polygon)
+	typedData1, err1 := order.GetTypedData(chains.Ethereum)
+	require.NoError(t, err1)
+	typedData2, err2 := order.GetTypedData(chains.Polygon)
+	require.NoError(t, err2)
 
 	// Domain chainId should be different
 	td1, _ := typedData1.(map[string]interface{})
@@ -119,16 +126,60 @@ func TestSolanaCrossChainOrder_ToJSON(t *testing.T) {
 	hashLock, err := hashlock.ForSingleFill(secret)
 	require.NoError(t, err)
 
+	// Create a minimal valid Solana order with required fields
+	srcToken, err := addresses.NewSolanaAddress("So11111111111111111111111111111111111111112")
+	require.NoError(t, err)
+	dstToken, err := addresses.EvmAddressFromString("0x0000000000000000000000000000000000000000")
+	require.NoError(t, err)
+	maker, err := addresses.NewSolanaAddress("So11111111111111111111111111111111111111112")
+	require.NoError(t, err)
+	receiver, err := addresses.EvmAddressFromString("0x0000000000000000000000000000000000000000")
+	require.NoError(t, err)
+
 	order := &SolanaCrossChainOrder{
 		OrderHash:            orderHash,
 		HashLock:             hashLock,
 		MultipleFillsAllowed: true,
+		SrcToken:             srcToken,
+		DstToken:             dstToken,
+		Maker:                maker,
+		Receiver:             receiver,
+		SrcAmount:            big.NewInt(1000000),
+		MinDstAmount:         big.NewInt(950000),
+		SrcSafetyDeposit:     big.NewInt(1000),
+		DstSafetyDeposit:     big.NewInt(1000),
+		TimeLocks:            nil, // Can be nil for test
+		DstChainID:           chains.Ethereum,
+		Salt:                 big.NewInt(12345),
+		Source:               "sdk",
+		SrcAssetIsNative:     false,
 	}
 
-	json := order.ToJSON()
-	assert.NotNil(t, json)
-	assert.Contains(t, json, "orderHash")
-	assert.Contains(t, json, "hashLock")
+	jsonData := order.ToJSON()
+	assert.NotNil(t, jsonData)
+	
+	// Check that all required top-level keys exist
+	_, hasOrderInfo := jsonData["orderInfo"]
+	assert.True(t, hasOrderInfo, "json should contain orderInfo")
+	
+	_, hasEscrowParams := jsonData["escrowParams"]
+	assert.True(t, hasEscrowParams, "json should contain escrowParams")
+	
+	_, hasDetails := jsonData["details"]
+	assert.True(t, hasDetails, "json should contain details")
+	
+	_, hasExtra := jsonData["extra"]
+	assert.True(t, hasExtra, "json should contain extra")
+	
+	orderInfo, ok := jsonData["orderInfo"].(map[string]interface{})
+	assert.True(t, ok, "orderInfo should be a map")
+	if ok {
+		_, hasSrcToken := orderInfo["srcToken"]
+		assert.True(t, hasSrcToken, "orderInfo should contain srcToken")
+		
+		_, hasDstToken := orderInfo["dstToken"]
+		assert.True(t, hasDstToken, "orderInfo should contain dstToken")
+	}
 }
 
 func TestLimitOrderV4Struct(t *testing.T) {
@@ -178,7 +229,73 @@ func TestEvmCrossChainOrder_WithNativeAsset(t *testing.T) {
 		MultipleFillsAllowed: true,
 	}
 
-	built := order.Build()
+	built, err := order.Build()
+	require.NoError(t, err)
 	assert.True(t, order.MakerAsset.IsNative())
-	assert.Equal(t, addresses.NativeCurrency, built.MakerAsset)
+	// Build() returns the address as returned by ToString(), which may have mixed case
+	// Compare case-insensitively since addresses are case-insensitive
+	assert.Equal(t, strings.ToLower(addresses.NativeCurrency), strings.ToLower(built.MakerAsset))
+}
+
+func TestEvmCrossChainOrder_Build_NilMaker(t *testing.T) {
+	order := sampleEvmOrder()
+	order.Maker = nil
+
+	_, err := order.Build()
+	require.Error(t, err)
+	assert.Contains(t, err.Error(), "maker address is required")
+}
+
+func TestEvmCrossChainOrder_Build_NilMakerAsset(t *testing.T) {
+	order := sampleEvmOrder()
+	order.MakerAsset = nil
+
+	_, err := order.Build()
+	require.Error(t, err)
+	assert.Contains(t, err.Error(), "makerAsset address is required")
+}
+
+func TestEvmCrossChainOrder_Build_NilTakerAsset(t *testing.T) {
+	order := sampleEvmOrder()
+	order.TakerAsset = nil
+
+	_, err := order.Build()
+	require.Error(t, err)
+	assert.Contains(t, err.Error(), "takerAsset address is required")
+}
+
+func TestEvmCrossChainOrder_Build_NilReceiver(t *testing.T) {
+	order := sampleEvmOrder()
+	order.Receiver = nil
+
+	_, err := order.Build()
+	require.Error(t, err)
+	assert.Contains(t, err.Error(), "receiver address is required")
+}
+
+func TestEvmCrossChainOrder_Build_NilHashLock(t *testing.T) {
+	order := sampleEvmOrder()
+	order.HashLock = nil
+
+	_, err := order.Build()
+	require.Error(t, err)
+	assert.Contains(t, err.Error(), "hashLock is required")
+}
+
+func TestEvmCrossChainOrder_GetTypedData_NilMaker(t *testing.T) {
+	order := sampleEvmOrder()
+	order.Maker = nil
+
+	_, err := order.GetTypedData(chains.Ethereum)
+	require.Error(t, err)
+	assert.Contains(t, err.Error(), "maker address is required")
+}
+
+func TestEvmCrossChainOrder_GetOrderHash_NilMaker(t *testing.T) {
+	order := sampleEvmOrder()
+	order.Maker = nil
+
+	_, err := order.GetOrderHash(chains.Ethereum)
+	require.Error(t, err)
+	assert.Contains(t, err.Error(), "maker address is required")
 }

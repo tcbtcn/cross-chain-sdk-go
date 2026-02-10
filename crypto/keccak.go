@@ -47,6 +47,9 @@ func SolidityPackedKeccak256Hex(types []string, values []interface{}) (string, e
 }
 
 func packSolidityData(types []string, values []interface{}) ([]byte, error) {
+	if len(types) != len(values) {
+		return nil, &PackingError{Message: "types and values length mismatch"}
+	}
 	var result []byte
 	for i, typ := range types {
 		val := values[i]
