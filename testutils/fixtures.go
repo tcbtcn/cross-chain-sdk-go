@@ -1,0 +1,26 @@
+package testutils
+
+import (
+	"github.com/dawitel/cross-chain-sdk-go/domains/addresses"
+)
+
+// Sample EVM Addresses
+var (
+	SampleEvmAddress1 = addresses.NewEvmAddress("0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb")
+	SampleEvmAddress2 = addresses.NewEvmAddress("0x8ba1f109551bD432803012645Hac136c22C9")
+	SampleEvmAddress3 = addresses.NewEvmAddress("0x0000000000000000000000000000000000000000")
+)
+
+// Sample Solana Addresses
+var (
+	SampleSolanaAddress1 = "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGxrHJf99"
+	SampleSolanaAddress2 = "So11111111111111111111111111111111111111112"
+)
+
+// Sample Secrets
+var (
+	SampleSecret1 = "0x" + "0000000000000000000000000000000000000000000000000000000000000001"
+	SampleSecret2 = "0x" + "0000000000000000000000000000000000000000000000000000000000000002"
+	SampleSecret3 = "0x" + "0000000000000000000000000000000000000000000000000000000000000003"
+	SampleSecret4 = "0x" + "0000000000000000000000000000000000000000000000000000000000000004"
+)
