@@ -87,7 +87,7 @@ func TestQuoterApi_GetQuote(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(200)
-		json.NewEncoder(w).Encode(sampleQuote())
+		_ = json.NewEncoder(w).Encode(sampleQuote())
 	}))
 	defer server.Close()
 
@@ -120,7 +120,7 @@ func TestQuoterApi_GetQuoteWithCustomPreset(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(200)
-		json.NewEncoder(w).Encode(sampleQuote())
+		_ = json.NewEncoder(w).Encode(sampleQuote())
 	}))
 	defer server.Close()
 

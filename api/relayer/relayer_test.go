@@ -74,7 +74,7 @@ func TestRelayerApi_SubmitSecret(t *testing.T) {
 		assert.Equal(t, "POST", r.Method)
 
 		var req SubmitSecretRequest
-		json.NewDecoder(r.Body).Decode(&req)
+		_ = json.NewDecoder(r.Body).Decode(&req)
 		assert.Equal(t, "0x123", req.OrderHash)
 		assert.Equal(t, "0xsecret", req.Secret)
 
@@ -97,7 +97,7 @@ func TestRelayerApi_Submit_Error(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(400)
-		json.NewEncoder(w).Encode(map[string]string{"error": "bad request"})
+		_ = json.NewEncoder(w).Encode(map[string]string{"error": "bad request"})
 	}))
 	defer server.Close()
 

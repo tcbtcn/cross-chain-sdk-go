@@ -144,7 +144,7 @@ func TestSDK_GetQuote(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(200)
-		json.NewEncoder(w).Encode(sampleQuote())
+		_ = json.NewEncoder(w).Encode(sampleQuote())
 	}))
 	defer server.Close()
 
@@ -174,7 +174,7 @@ func TestSDK_GetQuoteWithCustomPreset(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(200)
-		json.NewEncoder(w).Encode(sampleQuote())
+		_ = json.NewEncoder(w).Encode(sampleQuote())
 	}))
 	defer server.Close()
 
@@ -443,7 +443,7 @@ func TestSDK_GetOrderStatus(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(200)
-		json.NewEncoder(w).Encode(apiorders.OrderStatusResponse{
+		_ = json.NewEncoder(w).Encode(apiorders.OrderStatusResponse{
 			OrderHash:  "0x123",
 			Status:     apiorders.OrderStatusPending,
 			SrcChainID: chains.Ethereum,
@@ -468,7 +468,7 @@ func TestSDK_GetActiveOrders(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(200)
-		json.NewEncoder(w).Encode(apiorders.ActiveOrdersResponse{
+		_ = json.NewEncoder(w).Encode(apiorders.ActiveOrdersResponse{
 			Items:      []apiorders.ActiveOrder{},
 			TotalCount: 0,
 		})
@@ -512,7 +512,7 @@ func TestSDK_BuildCancelOrderCallData(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(200)
-		json.NewEncoder(w).Encode(apiorders.OrderStatusResponse{
+		_ = json.NewEncoder(w).Encode(apiorders.OrderStatusResponse{
 			OrderHash:  "0x123",
 			Status:     apiorders.OrderStatusPending,
 			SrcChainID: chains.Ethereum,
@@ -541,7 +541,7 @@ func TestSDK_BuildCancelOrderCallData_NonEvm(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(200)
-		json.NewEncoder(w).Encode(apiorders.OrderStatusResponse{
+		_ = json.NewEncoder(w).Encode(apiorders.OrderStatusResponse{
 			OrderHash:  "0x123",
 			Status:     apiorders.OrderStatusPending,
 			SrcChainID: chains.Solana, // Non-EVM

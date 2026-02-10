@@ -27,7 +27,7 @@ func TestOrdersApi_GetOrderStatus(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(200)
-		json.NewEncoder(w).Encode(OrderStatusResponse{
+		_ = json.NewEncoder(w).Encode(OrderStatusResponse{
 			OrderHash:  "0x123",
 			Status:     OrderStatusPending,
 			SrcChainID: chains.Ethereum,
@@ -52,7 +52,7 @@ func TestOrdersApi_GetActiveOrders(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(200)
-		json.NewEncoder(w).Encode(ActiveOrdersResponse{
+		_ = json.NewEncoder(w).Encode(ActiveOrdersResponse{
 			Items:      []ActiveOrder{},
 			TotalCount: 0,
 		})
@@ -79,7 +79,7 @@ func TestOrdersApi_GetOrdersByMaker(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(200)
-		json.NewEncoder(w).Encode(OrdersByMakerResponse{
+		_ = json.NewEncoder(w).Encode(OrdersByMakerResponse{
 			Items:      []OrderFillsByMakerOutput{},
 			TotalCount: 0,
 		})
@@ -107,7 +107,7 @@ func TestOrdersApi_GetReadyToAcceptSecretFills(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(200)
-		json.NewEncoder(w).Encode(ReadyToAcceptSecretFills{
+		_ = json.NewEncoder(w).Encode(ReadyToAcceptSecretFills{
 			Fills: []ReadyToAcceptSecretFill{},
 		})
 	}))
@@ -128,7 +128,7 @@ func TestOrdersApi_GetPublishedSecrets(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(200)
-		json.NewEncoder(w).Encode(PublishedSecretsResponse{
+		_ = json.NewEncoder(w).Encode(PublishedSecretsResponse{
 			Secrets: []PublicSecret{},
 		})
 	}))
@@ -149,7 +149,7 @@ func TestOrdersApi_GetCancellableOrders(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(200)
-		json.NewEncoder(w).Encode(CancellableOrdersResponse{
+		_ = json.NewEncoder(w).Encode(CancellableOrdersResponse{
 			Items:      []interface{}{},
 			TotalCount: 0,
 		})
@@ -171,7 +171,7 @@ func TestOrdersApi_GetReadyToExecutePublicActions(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(200)
-		json.NewEncoder(w).Encode(ReadyToExecutePublicActions{
+		_ = json.NewEncoder(w).Encode(ReadyToExecutePublicActions{
 			Actions: []ReadyToExecutePublicAction{},
 		})
 	}))

@@ -15,19 +15,15 @@ type MockHTTPClient struct {
 
 func (m *MockHTTPClient) Get(ctx context.Context, url string, result interface{}) error {
 	args := m.Called(ctx, url, result)
-	if args.Get(0) != nil && result != nil {
-		// Use reflection or type assertion to copy response
-		// For now, return the error from mock
-	}
+	_ = args.Get(0)
+	_ = result
 	return args.Error(1)
 }
 
 func (m *MockHTTPClient) Post(ctx context.Context, url string, data interface{}, result interface{}) error {
 	args := m.Called(ctx, url, data, result)
-	if args.Get(0) != nil && result != nil {
-		// Use reflection or type assertion to copy response
-		// For now, return the error from mock
-	}
+	_ = args.Get(0)
+	_ = result
 	return args.Error(1)
 }
 
