@@ -21,8 +21,8 @@ func main() {
 
 	// Create WebSocket API client
 	ws, err := wsapi.NewWebSocketApi(wsapi.WsApiConfig{
-		URL:     "wss://api.1inch.dev/fusion-plus/ws",
-		AuthKey: authKey,
+		URL:      "wss://api.1inch.dev/fusion-plus/ws",
+		AuthKey:  authKey,
 		LazyInit: false, // Auto-connect on creation
 	})
 	if err != nil {

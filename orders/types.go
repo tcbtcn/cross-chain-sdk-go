@@ -269,7 +269,7 @@ func (o *SolanaCrossChainOrder) ToJSON() map[string]interface{} {
 	}
 
 	extra := map[string]interface{}{
-		"srcAssetIsNative":    o.SrcAssetIsNative,
+		"srcAssetIsNative":     o.SrcAssetIsNative,
 		"allowMultipleFills":   o.MultipleFillsAllowed,
 		"orderExpirationDelay": "12", // Default value
 		"resolverCancellationConfig": map[string]interface{}{

@@ -157,26 +157,26 @@ func TestSolanaCrossChainOrder_ToJSON(t *testing.T) {
 
 	jsonData := order.ToJSON()
 	assert.NotNil(t, jsonData)
-	
+
 	// Check that all required top-level keys exist
 	_, hasOrderInfo := jsonData["orderInfo"]
 	assert.True(t, hasOrderInfo, "json should contain orderInfo")
-	
+
 	_, hasEscrowParams := jsonData["escrowParams"]
 	assert.True(t, hasEscrowParams, "json should contain escrowParams")
-	
+
 	_, hasDetails := jsonData["details"]
 	assert.True(t, hasDetails, "json should contain details")
-	
+
 	_, hasExtra := jsonData["extra"]
 	assert.True(t, hasExtra, "json should contain extra")
-	
+
 	orderInfo, ok := jsonData["orderInfo"].(map[string]interface{})
 	assert.True(t, ok, "orderInfo should be a map")
 	if ok {
 		_, hasSrcToken := orderInfo["srcToken"]
 		assert.True(t, hasSrcToken, "orderInfo should contain srcToken")
-		
+
 		_, hasDstToken := orderInfo["dstToken"]
 		assert.True(t, hasDstToken, "orderInfo should contain dstToken")
 	}

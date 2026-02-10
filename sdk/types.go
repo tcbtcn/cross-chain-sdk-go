@@ -78,9 +78,9 @@ type EvmOrderCancellationData struct {
 }
 
 type SvmOrderCancellationData struct {
-	OrderHash            []byte
-	Maker                *addresses.SolanaAddress
-	Token                *addresses.SolanaAddress
-	CancellationConfig   interface{} // ResolverCancellationConfig - simplified for now
-	IsAssetNative        bool
+	OrderHash          []byte
+	Maker              *addresses.SolanaAddress
+	Token              *addresses.SolanaAddress
+	CancellationConfig interface{} // ResolverCancellationConfig - simplified for now
+	IsAssetNative      bool
 }

@@ -19,7 +19,7 @@ func TestNewOrdersApi(t *testing.T) {
 		URL:     "https://api.example.com",
 		AuthKey: "test-key",
 	}, httpClient)
-	
+
 	assert.NotNil(t, api)
 }
 

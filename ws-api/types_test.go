@@ -132,29 +132,29 @@ func TestGetAllowedMethodsRpcEvent_GetMethod(t *testing.T) {
 
 func TestOrderCreatedEvent_Fields(t *testing.T) {
 	order := orders.LimitOrderV4Struct{
-		Maker:         "0xmaker",
-		MakerAsset:    "0xasset",
-		TakerAsset:    "0xtaker",
-		MakingAmount:  "1000000",
-		TakingAmount:  "950000",
-		Receiver:      "0xreceiver",
-		Salt:          "12345",
-		Expiration:    "1735689600",
-		Nonce:         "67890",
+		Maker:        "0xmaker",
+		MakerAsset:   "0xasset",
+		TakerAsset:   "0xtaker",
+		MakingAmount: "1000000",
+		TakingAmount: "950000",
+		Receiver:     "0xreceiver",
+		Salt:         "12345",
+		Expiration:   "1735689600",
+		Nonce:        "67890",
 	}
 
 	event := &OrderCreatedEvent{
-		Event:            EventTypeOrderCreated,
-		SrcChainID:       chains.Ethereum,
-		DstChainID:       chains.Polygon,
-		OrderHash:        "0xhash",
-		Order:            order,
-		Extension:        "0xext",
-		Signature:        "0xsig",
-		IsMakerContract:  false,
-		QuoteID:          "quote-123",
-		MerkleLeaves:     []string{"0xleaf1", "0xleaf2"},
-		SecretHashes:     []string{"0xhash1", "0xhash2"},
+		Event:           EventTypeOrderCreated,
+		SrcChainID:      chains.Ethereum,
+		DstChainID:      chains.Polygon,
+		OrderHash:       "0xhash",
+		Order:           order,
+		Extension:       "0xext",
+		Signature:       "0xsig",
+		IsMakerContract: false,
+		QuoteID:         "quote-123",
+		MerkleLeaves:    []string{"0xleaf1", "0xleaf2"},
+		SecretHashes:    []string{"0xhash1", "0xhash2"},
 	}
 
 	assert.Equal(t, EventTypeOrderCreated, event.Event)
