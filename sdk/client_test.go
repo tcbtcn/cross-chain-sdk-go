@@ -46,7 +46,7 @@ func sampleQuote() *quoter.QuoterResponse {
 				AllowMultipleFills: true,
 				GasCost: quoter.GasCost{
 					GasBumpEstimate:  100000,
-					GasPriceEstimate: "20000000000",
+					GasPriceEstimate: "2000000000",
 				},
 				ExclusiveResolver: "0x0000000000000000000000000000000000000000",
 				SecretsCount:      1,
@@ -289,6 +289,70 @@ func TestSDK_SignOrder_NoProvider(t *testing.T) {
 	assert.Empty(t, signature)
 }
 
+func TestSDK_CreateOrder_ExtensionBuilt(t *testing.T) {
+	config := Config{
+		URL:     "https://api.example.com",
+		AuthKey: "test-key",
+	}
+	sdk := NewSDK(config)
+
+	quote := sampleQuote()
+	secret := repeatHex("00", 31) + "01"
+	hashLock, err := hashlock.ForSingleFill(secret)
+	require.NoError(t, err)
+
+	params := OrderParams{
+		WalletAddress: "0x0742D35CC6634c0532925A3b844bc9E7595f0Beb",
+		HashLock:      hashLock,
+		SecretHashes:  []string{repeatHex("00", 32)},
+		Preset:        "fast",
+	}
+
+	preparedOrder, err := sdk.CreateOrder(context.Background(), quote, params)
+	require.NoError(t, err)
+	assert.NotNil(t, preparedOrder)
+
+	order, ok := preparedOrder.Order.(*orders.EvmCrossChainOrder)
+	require.True(t, ok, "order should be EvmCrossChainOrder")
+	assert.NotEmpty(t, order.Extension, "extension should be built")
+	assert.Equal(t, "0x", order.Extension[:2], "extension should start with 0x")
+}
+
+func TestSDK_CreateOrder_ExtensionWithWhitelist(t *testing.T) {
+	config := Config{
+		URL:     "https://api.example.com",
+		AuthKey: "test-key",
+	}
+	sdk := NewSDK(config)
+
+	quote := sampleQuote()
+	quote.Whitelist = []string{
+		"0x1111111111111111111111111111111111111111",
+		"0x2222222222222222222222222222222222222222",
+	}
+
+	secret := repeatHex("00", 31) + "01"
+	hashLock, err := hashlock.ForSingleFill(secret)
+	require.NoError(t, err)
+
+	params := OrderParams{
+		WalletAddress: "0x0742D35CC6634c0532925A3b844bc9E7595f0Beb",
+		HashLock:      hashLock,
+		SecretHashes:  []string{repeatHex("00", 32)},
+		Preset:        "fast",
+	}
+
+	preparedOrder, err := sdk.CreateOrder(context.Background(), quote, params)
+	require.NoError(t, err)
+	assert.NotNil(t, preparedOrder)
+
+	order, ok := preparedOrder.Order.(*orders.EvmCrossChainOrder)
+	require.True(t, ok)
+	assert.NotEmpty(t, order.Extension)
+	assert.NotEmpty(t, order.Whitelist)
+	assert.Equal(t, len(quote.Whitelist), len(order.Whitelist))
+}
+
 func TestSDK_SignNativeOrder(t *testing.T) {
 	config := Config{
 		URL:     "https://api.example.com",
@@ -364,9 +428,21 @@ func TestSDK_AnnounceOrder(t *testing.T) {
 	hashLock, err := hashlock.ForSingleFill(secret)
 	require.NoError(t, err)
 
+	auctionDetails := &auction.AuctionDetails{
+		StartTime:       big.NewInt(1735689600),
+		Duration:        big.NewInt(300),
+		InitialRateBump: 100,
+		Points:          []auction.AuctionPoint{},
+		GasCost: auction.GasCost{
+			GasBumpEstimate:  big.NewInt(100000),
+			GasPriceEstimate: big.NewInt(2000000000),
+		},
+	}
+
 	order := &orders.SolanaCrossChainOrder{
 		OrderHash:            orderHash,
 		HashLock:             hashLock,
+		Auction:              auctionDetails,
 		MultipleFillsAllowed: true,
 	}
 

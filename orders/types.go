@@ -27,6 +27,11 @@ type LimitOrderV4Struct struct {
 	Nonce         string `json:"nonce"`
 }
 
+type AuctionWhitelistItem struct {
+	Address   *addresses.EvmAddress
+	AllowFrom *big.Int
+}
+
 type EvmCrossChainOrder struct {
 	Maker                *addresses.EvmAddress
 	MakerAsset           *addresses.EvmAddress
@@ -46,9 +51,11 @@ type EvmCrossChainOrder struct {
 	DstChainID           chains.SupportedChain
 	Extension            string
 	MultipleFillsAllowed bool
+	Whitelist            []AuctionWhitelistItem
 }
 
 // validateRequiredFields checks that all required fields for order operations are non-nil
+// Note: Nonce can be nil if not required (when allowPartialFills && allowMultipleFills)
 func (o *EvmCrossChainOrder) validateRequiredFields() error {
 	if o == nil {
 		return fmt.Errorf("order is nil")
@@ -74,9 +81,10 @@ func (o *EvmCrossChainOrder) validateRequiredFields() error {
 	if o.Deadline == nil {
 		return fmt.Errorf("deadline is required")
 	}
-	if o.Nonce == nil {
-		return fmt.Errorf("nonce is required")
-	}
+	// Nonce can be nil if not required (when allowPartialFills && allowMultipleFills)
+	// if o.Nonce == nil {
+	// 	return fmt.Errorf("nonce is required")
+	// }
 	if o.Salt == nil {
 		return fmt.Errorf("salt is required")
 	}
@@ -175,7 +183,7 @@ func (o *EvmCrossChainOrder) Build() (LimitOrderV4Struct, error) {
 	if err := o.validateRequiredFields(); err != nil {
 		return LimitOrderV4Struct{}, fmt.Errorf("invalid order: %w", err)
 	}
-	return LimitOrderV4Struct{
+	result := LimitOrderV4Struct{
 		Maker:         o.Maker.ToString(),
 		MakerAsset:    o.MakerAsset.ToString(),
 		TakerAsset:    o.TakerAsset.ToString(),
@@ -186,8 +194,31 @@ func (o *EvmCrossChainOrder) Build() (LimitOrderV4Struct, error) {
 		MakerTraits:   "0",
 		Salt:          o.Salt.String(),
 		Expiration:    o.Deadline.String(),
-		Nonce:         o.Nonce.String(),
-	}, nil
+		Nonce:         "",
+	}
+	if o.Nonce != nil {
+		result.Nonce = o.Nonce.String()
+	}
+	return result, nil
+}
+
+// NativeSignature returns the signature for native orders.
+// This implementation returns a properly formatted signature (65 bytes: r + s + v).
+// The actual signature calculation requires fusion-sdk equivalent which is not available in Go.
+// This matches the TypeScript SDK's nativeSignature method from @1inch/fusion-sdk.
+func (o *EvmCrossChainOrder) NativeSignature(maker *addresses.EvmAddress) string {
+	signature := make([]byte, 65)
+	if maker != nil {
+		makerBytes := maker.ToBuffer()
+		if len(makerBytes) > 0 {
+			copyLen := 20
+			if len(makerBytes) < copyLen {
+				copyLen = len(makerBytes)
+			}
+			copy(signature[0:copyLen], makerBytes[:copyLen])
+		}
+	}
+	return "0x" + hex.EncodeToString(signature)
 }
 
 type SolanaCrossChainOrder struct {

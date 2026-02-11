@@ -299,3 +299,22 @@ func TestEvmCrossChainOrder_GetOrderHash_NilMaker(t *testing.T) {
 	require.Error(t, err)
 	assert.Contains(t, err.Error(), "maker address is required")
 }
+
+func TestEvmCrossChainOrder_NativeSignature(t *testing.T) {
+	order := sampleEvmOrder()
+	maker := addresses.NewEvmAddress("0x0742D35CC6634c0532925A3b844bc9E7595f0Beb")
+
+	signature := order.NativeSignature(maker)
+	assert.NotEmpty(t, signature)
+	assert.Equal(t, "0x", signature[:2])
+	assert.Equal(t, 132, len(signature), "signature should be 65 bytes = 130 hex chars + 0x prefix")
+}
+
+func TestEvmCrossChainOrder_NativeSignature_NilMaker(t *testing.T) {
+	order := sampleEvmOrder()
+
+	signature := order.NativeSignature(nil)
+	assert.NotEmpty(t, signature)
+	assert.Equal(t, "0x", signature[:2])
+	assert.Equal(t, 132, len(signature))
+}
