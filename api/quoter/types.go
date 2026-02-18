@@ -1,8 +1,8 @@
 package quoter
 
 import (
-	"github.com/dawitel/cross-chain-sdk-go/chains"
-	"github.com/dawitel/cross-chain-sdk-go/domains/auction"
+	"github.com/tcbtcn/cross-chain-sdk-go/chains"
+	"github.com/tcbtcn/cross-chain-sdk-go/domains/auction"
 )
 
 type QuoterRequestParams struct {

@@ -84,12 +84,12 @@ jobs:
             ## Installation
             
             ```bash
-            go get github.com/dawitel/cross-chain-sdk-go@${{ steps.version.outputs.version }}
+            go get github.com/tcbtcn/cross-chain-sdk-go@${{ steps.version.outputs.version }}
             ```
             
             ## Documentation
             
-            Documentation is available at: https://pkg.go.dev/github.com/dawitel/cross-chain-sdk-go@${{ steps.version.outputs.version }}
+            Documentation is available at: https://pkg.go.dev/github.com/tcbtcn/cross-chain-sdk-go@${{ steps.version.outputs.version }}
           draft: false
           prerelease: false
           generate_release_notes: true
@@ -120,16 +120,16 @@ jobs:
       - name: Verify module
         run: |
           go mod verify
-          go list -m -versions github.com/dawitel/cross-chain-sdk-go
+          go list -m -versions github.com/tcbtcn/cross-chain-sdk-go
       
       - name: Trigger pkg.go.dev indexing
         run: |
           VERSION="${{ steps.version.outputs.version }}"
           echo "Triggering pkg.go.dev indexing for version: $VERSION"
-          curl -X POST "https://proxy.golang.org/github.com/dawitel/cross-chain-sdk-go/@v/$VERSION.info"
+          curl -X POST "https://proxy.golang.org/github.com/tcbtcn/cross-chain-sdk-go/@v/$VERSION.info"
       
       - name: Wait for indexing
         run: |
           echo "Waiting for pkg.go.dev to index the package..."
-          echo "Package will be available at: https://pkg.go.dev/github.com/dawitel/cross-chain-sdk-go@${{ steps.version.outputs.version }}"
+          echo "Package will be available at: https://pkg.go.dev/github.com/tcbtcn/cross-chain-sdk-go@${{ steps.version.outputs.version }}"
           echo "Note: It may take a few minutes for the package to appear on pkg.go.dev"

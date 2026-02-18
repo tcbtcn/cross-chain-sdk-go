@@ -6,10 +6,10 @@ import (
 	"log"
 	"time"
 
-	apiorders "github.com/dawitel/cross-chain-sdk-go/api/orders"
-	"github.com/dawitel/cross-chain-sdk-go/chains"
-	"github.com/dawitel/cross-chain-sdk-go/domains/hashlock"
-	"github.com/dawitel/cross-chain-sdk-go/sdk"
+	apiorders "github.com/tcbtcn/cross-chain-sdk-go/api/orders"
+	"github.com/tcbtcn/cross-chain-sdk-go/chains"
+	"github.com/tcbtcn/cross-chain-sdk-go/domains/hashlock"
+	"github.com/tcbtcn/cross-chain-sdk-go/sdk"
 )
 
 func main() {

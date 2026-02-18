@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"math/big"
 
-	"github.com/dawitel/cross-chain-sdk-go/crypto"
-	"github.com/dawitel/cross-chain-sdk-go/crypto/merkle"
-	"github.com/dawitel/cross-chain-sdk-go/utils"
+	"github.com/tcbtcn/cross-chain-sdk-go/crypto"
+	"github.com/tcbtcn/cross-chain-sdk-go/crypto/merkle"
+	"github.com/tcbtcn/cross-chain-sdk-go/utils"
 )
 
 const Web3Type = "bytes32"

@@ -8,7 +8,7 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/dawitel/cross-chain-sdk-go/ws-api"
+	wsapi "github.com/tcbtcn/cross-chain-sdk-go/ws-api"
 )
 
 func main() {

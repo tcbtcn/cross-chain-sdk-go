@@ -4,10 +4,10 @@ import (
 	"math/big"
 	"testing"
 
-	"github.com/dawitel/cross-chain-sdk-go/chains"
-	"github.com/dawitel/cross-chain-sdk-go/domains/hashlock"
-	"github.com/dawitel/cross-chain-sdk-go/orders"
 	"github.com/stretchr/testify/assert"
+	"github.com/tcbtcn/cross-chain-sdk-go/chains"
+	"github.com/tcbtcn/cross-chain-sdk-go/domains/hashlock"
+	"github.com/tcbtcn/cross-chain-sdk-go/orders"
 )
 
 func TestConfig(t *testing.T) {

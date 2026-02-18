@@ -7,8 +7,8 @@ import (
 	"math/big"
 	"strings"
 
-	"github.com/dawitel/cross-chain-sdk-go/domains/addresses"
 	"github.com/ethereum/go-ethereum/common"
+	"github.com/tcbtcn/cross-chain-sdk-go/domains/addresses"
 )
 
 type SettlementPostInteractionData struct {

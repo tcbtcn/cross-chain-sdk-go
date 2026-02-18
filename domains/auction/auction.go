@@ -4,7 +4,7 @@ import (
 	"encoding/hex"
 	"math/big"
 
-	"github.com/dawitel/cross-chain-sdk-go/crypto"
+	"github.com/tcbtcn/cross-chain-sdk-go/crypto"
 )
 
 type AuctionDetails struct {

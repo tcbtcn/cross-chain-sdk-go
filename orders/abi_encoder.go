@@ -6,11 +6,11 @@ import (
 	"math/big"
 	"strings"
 
-	"github.com/dawitel/cross-chain-sdk-go/domains/addresses"
-	"github.com/dawitel/cross-chain-sdk-go/domains/hashlock"
-	"github.com/dawitel/cross-chain-sdk-go/domains/timelocks"
 	"github.com/ethereum/go-ethereum/accounts/abi"
 	"github.com/ethereum/go-ethereum/common/math"
+	"github.com/tcbtcn/cross-chain-sdk-go/domains/addresses"
+	"github.com/tcbtcn/cross-chain-sdk-go/domains/hashlock"
+	"github.com/tcbtcn/cross-chain-sdk-go/domains/timelocks"
 )
 
 const (

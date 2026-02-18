@@ -4,9 +4,9 @@ import (
 	"context"
 	"testing"
 
-	"github.com/dawitel/cross-chain-sdk-go/crypto/eip712"
-	"github.com/dawitel/cross-chain-sdk-go/testutils"
 	"github.com/stretchr/testify/assert"
+	"github.com/tcbtcn/cross-chain-sdk-go/crypto/eip712"
+	"github.com/tcbtcn/cross-chain-sdk-go/testutils"
 )
 
 func TestBlockchainProvider_Interface(t *testing.T) {

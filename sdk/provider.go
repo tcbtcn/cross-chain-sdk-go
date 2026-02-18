@@ -3,7 +3,7 @@ package sdk
 import (
 	"context"
 
-	"github.com/dawitel/cross-chain-sdk-go/crypto/eip712"
+	"github.com/tcbtcn/cross-chain-sdk-go/crypto/eip712"
 )
 
 type BlockchainProvider interface {

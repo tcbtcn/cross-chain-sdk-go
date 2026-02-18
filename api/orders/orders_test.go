@@ -7,10 +7,10 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	clienthttp "github.com/dawitel/cross-chain-sdk-go/api/http"
-	"github.com/dawitel/cross-chain-sdk-go/chains"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	clienthttp "github.com/tcbtcn/cross-chain-sdk-go/api/http"
+	"github.com/tcbtcn/cross-chain-sdk-go/chains"
 )
 
 func TestNewOrdersApi(t *testing.T) {

@@ -7,8 +7,8 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	clienthttp "github.com/dawitel/cross-chain-sdk-go/api/http"
 	"github.com/stretchr/testify/assert"
+	clienthttp "github.com/tcbtcn/cross-chain-sdk-go/api/http"
 )
 
 func TestNewRelayerApi(t *testing.T) {

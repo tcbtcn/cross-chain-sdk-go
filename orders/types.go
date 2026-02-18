@@ -5,12 +5,12 @@ import (
 	"fmt"
 	"math/big"
 
-	"github.com/dawitel/cross-chain-sdk-go/chains"
-	"github.com/dawitel/cross-chain-sdk-go/crypto/eip712"
-	"github.com/dawitel/cross-chain-sdk-go/domains/addresses"
-	"github.com/dawitel/cross-chain-sdk-go/domains/auction"
-	"github.com/dawitel/cross-chain-sdk-go/domains/hashlock"
-	"github.com/dawitel/cross-chain-sdk-go/domains/timelocks"
+	"github.com/tcbtcn/cross-chain-sdk-go/chains"
+	"github.com/tcbtcn/cross-chain-sdk-go/crypto/eip712"
+	"github.com/tcbtcn/cross-chain-sdk-go/domains/addresses"
+	"github.com/tcbtcn/cross-chain-sdk-go/domains/auction"
+	"github.com/tcbtcn/cross-chain-sdk-go/domains/hashlock"
+	"github.com/tcbtcn/cross-chain-sdk-go/domains/timelocks"
 )
 
 type LimitOrderV4Struct struct {

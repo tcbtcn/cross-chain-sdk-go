@@ -4,9 +4,9 @@ import (
 	"math/big"
 	"testing"
 
-	"github.com/dawitel/cross-chain-sdk-go/domains/addresses"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	"github.com/tcbtcn/cross-chain-sdk-go/domains/addresses"
 )
 
 func TestSettlementPostInteractionData_Encode(t *testing.T) {

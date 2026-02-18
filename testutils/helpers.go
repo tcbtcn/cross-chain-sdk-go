@@ -7,11 +7,11 @@ import (
 	"math/big"
 	"testing"
 
-	"github.com/dawitel/cross-chain-sdk-go/chains"
-	"github.com/dawitel/cross-chain-sdk-go/domains/addresses"
-	"github.com/dawitel/cross-chain-sdk-go/domains/hashlock"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	"github.com/tcbtcn/cross-chain-sdk-go/chains"
+	"github.com/tcbtcn/cross-chain-sdk-go/domains/addresses"
+	"github.com/tcbtcn/cross-chain-sdk-go/domains/hashlock"
 )
 
 // GenerateRandomSecret generates a random 32-byte secret

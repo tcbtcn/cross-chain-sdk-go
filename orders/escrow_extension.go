@@ -6,28 +6,28 @@ import (
 	"math/big"
 	"strings"
 
-	"github.com/dawitel/cross-chain-sdk-go/chains"
-	"github.com/dawitel/cross-chain-sdk-go/domains/addresses"
-	"github.com/dawitel/cross-chain-sdk-go/domains/auction"
-	"github.com/dawitel/cross-chain-sdk-go/domains/hashlock"
-	"github.com/dawitel/cross-chain-sdk-go/domains/timelocks"
 	"github.com/ethereum/go-ethereum/common/math"
+	"github.com/tcbtcn/cross-chain-sdk-go/chains"
+	"github.com/tcbtcn/cross-chain-sdk-go/domains/addresses"
+	"github.com/tcbtcn/cross-chain-sdk-go/domains/auction"
+	"github.com/tcbtcn/cross-chain-sdk-go/domains/hashlock"
+	"github.com/tcbtcn/cross-chain-sdk-go/domains/timelocks"
 )
 
 const ZX = "0x"
 
 type EscrowExtension struct {
-	Address              *addresses.EvmAddress
-	AuctionDetails       *auction.AuctionDetails
-	PostInteractionData  *SettlementPostInteractionData
-	MakerPermit          []byte
-	HashLock             *hashlock.HashLock
-	DstChainID           chains.SupportedChain
-	DstToken             addresses.AddressLike
-	SrcSafetyDeposit      *big.Int
-	DstSafetyDeposit      *big.Int
-	TimeLocks            *timelocks.TimeLocks
-	DstAddressFirstPart   *addresses.AddressComplement
+	Address             *addresses.EvmAddress
+	AuctionDetails      *auction.AuctionDetails
+	PostInteractionData *SettlementPostInteractionData
+	MakerPermit         []byte
+	HashLock            *hashlock.HashLock
+	DstChainID          chains.SupportedChain
+	DstToken            addresses.AddressLike
+	SrcSafetyDeposit    *big.Int
+	DstSafetyDeposit    *big.Int
+	TimeLocks           *timelocks.TimeLocks
+	DstAddressFirstPart *addresses.AddressComplement
 }
 
 func NewEscrowExtension(
@@ -44,8 +44,8 @@ func NewEscrowExtension(
 	dstAddressFirstPart *addresses.AddressComplement,
 ) *EscrowExtension {
 	return &EscrowExtension{
-		Address:            address,
-		AuctionDetails:     auctionDetails,
+		Address:             address,
+		AuctionDetails:      auctionDetails,
 		PostInteractionData: postInteractionData,
 		MakerPermit:         makerPermit,
 		HashLock:            hashLock,

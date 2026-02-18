@@ -1,7 +1,7 @@
 package testutils
 
 import (
-	"github.com/dawitel/cross-chain-sdk-go/domains/addresses"
+	"github.com/tcbtcn/cross-chain-sdk-go/domains/addresses"
 )
 
 // Sample EVM Addresses

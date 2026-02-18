@@ -5,7 +5,7 @@ Production-grade Go SDK for creating atomic cross-chain token swaps through 1inc
 ## Installation
 
 ```bash
-go get github.com/dawitel/cross-chain-sdk-go
+go get github.com/tcbtcn/cross-chain-sdk-go
 ```
 
 ## Quick Start
@@ -17,9 +17,9 @@ import (
     "context"
     "log"
 
-    "github.com/dawitel/cross-chain-sdk-go/chains"
-    "github.com/dawitel/cross-chain-sdk-go/domains/hashlock"
-    "github.com/dawitel/cross-chain-sdk-go/sdk"
+    "github.com/tcbtcn/cross-chain-sdk-go/chains"
+    "github.com/tcbtcn/cross-chain-sdk-go/domains/hashlock"
+    "github.com/tcbtcn/cross-chain-sdk-go/sdk"
 )
 
 func main() {
@@ -180,7 +180,7 @@ The WebSocket API provides real-time order updates and RPC functionality for the
 Creates a new WebSocket API client.
 
 ```go
-import "github.com/dawitel/cross-chain-sdk-go/ws-api"
+import "github.com/tcbtcn/cross-chain-sdk-go/ws-api"
 
 ws, err := wsapi.NewWebSocketApi(wsapi.WsApiConfig{
     URL:     "wss://api.1inch.dev/fusion-plus/ws",

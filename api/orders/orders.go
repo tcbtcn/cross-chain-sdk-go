@@ -4,9 +4,9 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/dawitel/cross-chain-sdk-go/api"
-	"github.com/dawitel/cross-chain-sdk-go/api/http"
-	"github.com/dawitel/cross-chain-sdk-go/chains"
+	"github.com/tcbtcn/cross-chain-sdk-go/api"
+	"github.com/tcbtcn/cross-chain-sdk-go/api/http"
+	"github.com/tcbtcn/cross-chain-sdk-go/chains"
 )
 
 const Version = "v1.1"

@@ -3,9 +3,9 @@ package testutils
 import (
 	"context"
 
-	"github.com/dawitel/cross-chain-sdk-go/api/http"
-	"github.com/dawitel/cross-chain-sdk-go/crypto/eip712"
 	"github.com/stretchr/testify/mock"
+	"github.com/tcbtcn/cross-chain-sdk-go/api/http"
+	"github.com/tcbtcn/cross-chain-sdk-go/crypto/eip712"
 )
 
 // MockHTTPClient is a mock implementation of http.Client

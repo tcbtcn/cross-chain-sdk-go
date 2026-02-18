@@ -1,4 +1,4 @@
-module github.com/dawitel/cross-chain-sdk-go
+module github.com/tcbtcn/cross-chain-sdk-go
 
 go 1.25.6
 

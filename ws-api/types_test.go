@@ -3,9 +3,9 @@ package wsapi
 import (
 	"testing"
 
-	"github.com/dawitel/cross-chain-sdk-go/chains"
-	"github.com/dawitel/cross-chain-sdk-go/orders"
 	"github.com/stretchr/testify/assert"
+	"github.com/tcbtcn/cross-chain-sdk-go/chains"
+	"github.com/tcbtcn/cross-chain-sdk-go/orders"
 )
 
 func TestWebSocketEvent(t *testing.T) {
